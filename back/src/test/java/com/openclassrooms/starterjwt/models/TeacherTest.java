@@ -82,4 +82,39 @@ class TeacherTest {
         assertNotNull(teacher.toString());
         assertTrue(teacher.toString().contains("Delahaye"));
     }
+
+    @Test
+    void shouldSetAllFieldsIndividually() {
+        LocalDateTime now = LocalDateTime.now();
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setLastName("Delahaye");
+        teacher.setFirstName("Margot");
+        teacher.setCreatedAt(now);
+        teacher.setUpdatedAt(now);
+
+        assertEquals(1L, teacher.getId());
+        assertEquals("Delahaye", teacher.getLastName());
+        assertEquals("Margot", teacher.getFirstName());
+        assertEquals(now, teacher.getCreatedAt());
+        assertEquals(now, teacher.getUpdatedAt());
+    }
+
+    @Test
+    void shouldBeEqualWhenBothIdsAreNull() {
+        Teacher teacher1 = new Teacher();
+        Teacher teacher2 = new Teacher();
+
+        assertEquals(teacher1, teacher2);
+        assertEquals(teacher1.hashCode(), teacher2.hashCode());
+    }
+
+        @Test
+    void shouldNotBeEqualWhenOneIdIsNullAndOtherIsNot() {
+        Teacher teacher1 = new Teacher(); // id null
+        Teacher teacher2 = Teacher.builder().id(1L).lastName("Delahaye").firstName("Margot").build();
+
+        assertNotEquals(teacher1, teacher2);
+        assertNotEquals(teacher2, teacher1);
+    }
 }

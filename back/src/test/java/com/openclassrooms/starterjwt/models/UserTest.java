@@ -97,4 +97,89 @@ class UserTest {
         assertNotNull(user.toString());
         assertTrue(user.toString().contains("test@studio.com"));
     }
+
+    @Test
+    void shouldConstructUserWithNoArgsConstructor() {
+        User user = new User();
+
+        assertNull(user.getId());
+    }
+
+    @Test
+    void shouldSetAllFieldsIndividually() {
+        LocalDateTime now = LocalDateTime.now();
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("test@studio.com");
+        user.setLastName("Doe");
+        user.setFirstName("John");
+        user.setPassword("pass");
+        user.setAdmin(true);
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
+
+        assertEquals(1L, user.getId());
+        assertEquals("test@studio.com", user.getEmail());
+        assertEquals("Doe", user.getLastName());
+        assertEquals("John", user.getFirstName());
+        assertEquals("pass", user.getPassword());
+        assertTrue(user.isAdmin());
+        assertEquals(now, user.getCreatedAt());
+        assertEquals(now, user.getUpdatedAt());
+    }
+
+    @Test
+    void shouldBeEqualWhenBothIdsAreNull() {
+        User user1 = new User("a@studio.com", "Doe", "John", "p1", false);
+        User user2 = new User("b@studio.com", "Smith", "Jane", "p2", true);
+
+        assertEquals(user1, user2);
+        assertEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void shouldNotBeEqualWhenOneIdIsNullAndOtherIsNot() {
+        User user1 = new User("a@studio.com", "Doe", "John", "p1", false); // id null
+        User user2 = User.builder().id(1L).email("a@studio.com").lastName("Doe").firstName("John").password("p1").admin(false).build();
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user2, user1);
+    }
+
+        @Test
+    void shouldThrowExceptionWhenSettingNullEmail() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.setEmail(null));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenSettingNullLastName() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.setLastName(null));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenSettingNullFirstName() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.setFirstName(null));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenSettingNullPassword() {
+        User user = new User();
+        assertThrows(NullPointerException.class, () -> user.setPassword(null));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenConstructingWithNullEmail() {
+        assertThrows(NullPointerException.class,
+                () -> new User(null, "Doe", "John", "pass", false));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenConstructingWithAllArgsAndNullEmail() {
+        LocalDateTime now = LocalDateTime.now();
+        assertThrows(NullPointerException.class,
+                () -> new User(1L, null, "Doe", "John", "pass", false, now, now));
+    }
 }
