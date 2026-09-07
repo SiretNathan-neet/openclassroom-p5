@@ -2,6 +2,8 @@ package com.openclassrooms.starterjwt.models;
 
 import org.junit.jupiter.api.Test;
 
+import com.openclassrooms.starterjwt.models.Session;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,5 +85,64 @@ class SessionTest {
 
         assertNotNull(session.toString());
         assertTrue(session.toString().contains("Yoga session"));
+    }
+
+        @Test
+    void shouldConstructSessionWithAllArgsConstructor() {
+        Date date = new Date();
+        LocalDateTime now = LocalDateTime.now();
+        Teacher teacher = Teacher.builder().id(1L).lastName("Delahaye").firstName("Margot").build();
+        ArrayList<User> users = new ArrayList<>();
+
+        Session session = new Session(1L, "Yoga session", date, "desc", teacher, users, now, now);
+
+        assertEquals(1L, session.getId());
+        assertEquals("Yoga session", session.getName());
+        assertEquals(teacher, session.getTeacher());
+    }
+
+    @Test
+    void shouldSetAllFieldsIndividually() {
+        Date date = new Date();
+        LocalDateTime now = LocalDateTime.now();
+        Teacher teacher = Teacher.builder().id(1L).lastName("Delahaye").firstName("Margot").build();
+        ArrayList<User> users = new ArrayList<>();
+
+        Session session = new Session();
+        session.setId(1L);
+        session.setName("Yoga session");
+        session.setDate(date);
+        session.setDescription("desc");
+        session.setTeacher(teacher);
+        session.setUsers(users);
+        session.setCreatedAt(now);
+        session.setUpdatedAt(now);
+
+        assertEquals(1L, session.getId());
+        assertEquals("Yoga session", session.getName());
+        assertEquals(date, session.getDate());
+        assertEquals("desc", session.getDescription());
+        assertEquals(teacher, session.getTeacher());
+        assertEquals(users, session.getUsers());
+        assertEquals(now, session.getCreatedAt());
+        assertEquals(now, session.getUpdatedAt());
+    }
+
+    @Test
+    void shouldBeEqualWhenBothIdsAreNull() {
+        Session session1 = new Session();
+        Session session2 = new Session();
+
+        assertEquals(session1, session2);
+        assertEquals(session1.hashCode(), session2.hashCode());
+    }
+
+    @Test
+    void shouldNotBeEqualWhenOneIdIsNullAndOtherIsNot() {
+        Session session1 = new Session(); // id null
+        Session session2 = Session.builder().id(1L).name("Yoga").build();
+
+        assertNotEquals(session1, session2);
+        assertNotEquals(session2, session1);
     }
 }
