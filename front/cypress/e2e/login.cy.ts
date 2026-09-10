@@ -24,4 +24,32 @@ describe('Login spec', () => {
 
     cy.url().should('include', '/sessions')
   })
+
+  it('Login failed - wrong credentials', () => {
+    cy.visit('/login')
+
+    cy.intercept('POST', '/api/auth/login', {
+      statusCode: 401,
+      body: {
+        message: 'Bad credentials'
+      },
+    }).as('loginFailed')
+
+    cy.get('input[formControlName=email]').type("yoga@studio.com")
+    cy.get('input[formControlName=password]').type(`${"wrongPassword"}{enter}{enter}`)
+
+    cy.wait('@loginFailed')
+
+    cy.url().should('include', '/login')
+    cy.get('.error').should('be.visible')
+  })
+
+  it('Login failed - missing required field', () => {
+    cy.visit('/login')
+
+    cy.get('input[formControlName=email]').type("yoga@studio.com")
+    // password left empty on purpose
+
+    cy.get('button[type=submit]').should('be.disabled')
+  })
 });
